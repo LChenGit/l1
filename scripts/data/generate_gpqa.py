@@ -26,7 +26,7 @@ parser.add_argument('--local_dir', type=str, required=True, help='Output directo
 args = parser.parse_args()
 
 # Ensure base output directory exists
-os.makedirs(args.output_dir, exist_ok=True)
+os.makedirs(args.local_dir, exist_ok=True)
 
 # Load dataset
 ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond")

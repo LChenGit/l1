@@ -2,17 +2,17 @@
 Script to generate prompt-based math QA datasets from AIME2025 and save them as .parquet files.
 
 Usage:
-    python script_name.py --output_dir /path/to/save
+    python script_name.py --local_dir /path/to/save
 
 Arguments:
-    --output_dir   The base directory where output files will be saved.
+    --local_dir   The base directory where output files will be saved.
 
 Output:
     - Saves one Parquet file for each `num_tokens` setting under the given output directory.
     - Subdirectories:
-        - For positive `num_tokens`:   output_dir/data_<num_tokens>/aime2025.parquet
-        - For negative `num_tokens`:   output_dir/data9_<num_tokens>/aime2025.parquet
-        - For num_tokens = -1:         output_dir/aime2025.parquet (baseline version)
+        - For positive `num_tokens`:   local_dir/data_<num_tokens>/aime2025.parquet
+        - For negative `num_tokens`:   local_dir/data9_<num_tokens>/aime2025.parquet
+        - For num_tokens = -1:         local_dir/aime2025.parquet (baseline version)
         
 Description:
     For each test sample in the combined AIME2025-I and AIME2025-II datasets, the script:
@@ -30,11 +30,11 @@ import random
 
 # Argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument('--output_dir', type=str, required=True, help='Output directory to save files')
+parser.add_argument('--local_dir', type=str, required=True, help='Output directory to save files')
 args = parser.parse_args()
 
 # Ensure output directory exists
-os.makedirs(args.output_dir, exist_ok=True)
+os.makedirs(args.local_dir, exist_ok=True)
 
 ds1 = load_dataset("opencompass/AIME2025", "AIME2025-I")['test']
 ds2 = load_dataset("opencompass/AIME2025", "AIME2025-II")['test']
@@ -70,12 +70,12 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
                     }
                 })
     if num_tokens == -1:
-        output_path = os.path.join(args.output_dir, 'aime2025.parquet')
+        output_path = os.path.join(args.local_dir, 'aime2025.parquet')
     else:
         if num_tokens < 0:
-            output_dir = os.path.join(args.output_dir, f'data9_{num_tokens}')
+            output_dir = os.path.join(args.local_dir, f'data9_{num_tokens}')
         else:
-            output_dir = os.path.join(args.output_dir, f'data_{num_tokens}')
+            output_dir = os.path.join(args.local_dir, f'data_{num_tokens}')
         os.makedirs(output_dir, exist_ok=True)
         output_path = os.path.join(output_dir, 'aime2025.parquet')
     

@@ -2,16 +2,16 @@
 Script to generate prompt-based QA datasets from GPQA and save them as .parquet files.
 
 Usage:
-    python script_name.py --output_dir /path/to/save
+    python script_name.py --local_dir /path/to/save
 
 Arguments:
-    --output_dir   The base directory where output files will be saved.
+    --local_dir   The base directory where output files will be saved.
 
 Output:
     - Saves one Parquet file for each `num_tokens` setting under the given output directory.
     - Subdirectories:
-        - For positive `num_tokens`:   output_dir/data_<num_tokens>/gpqa.parquet
-        - For negative `num_tokens`:   output_dir/data9_<num_tokens>/gpqa.parquet
+        - For positive `num_tokens`:   local_dir/data_<num_tokens>/gpqa.parquet
+        - For negative `num_tokens`:   local_dir/data9_<num_tokens>/gpqa.parquet
 """
 
 import pandas as pd
@@ -22,7 +22,7 @@ from datasets import load_dataset
 
 # Argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument('--output_dir', type=str, required=True, help='Output directory to save files')
+parser.add_argument('--local_dir', type=str, required=True, help='Output directory to save files')
 args = parser.parse_args()
 
 # Ensure base output directory exists
@@ -80,13 +80,13 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
 
     # Set output path
     if num_tokens == -1:
-        output_path = os.path.join(args.output_dir, 'gpqa.parquet')
+        output_path = os.path.join(args.local_dir, 'gpqa.parquet')
     elif num_tokens < -1:
-        output_dir = os.path.join(args.output_dir, f'data9_{num_tokens}')
+        output_dir = os.path.join(args.local_dir, f'data9_{num_tokens}')
         os.makedirs(output_dir, exist_ok=True)
         output_path = os.path.join(output_dir, 'gpqa.parquet')
     else:
-        output_dir = os.path.join(args.output_dir, f'data_{num_tokens}')
+        output_dir = os.path.join(args.local_dir, f'data_{num_tokens}')
         os.makedirs(output_dir, exist_ok=True)
         output_path = os.path.join(output_dir, 'gpqa.parquet')
 

@@ -31,7 +31,7 @@ You can use scripts in `scripts/data` to prepare your own dataset.
 
 Example, generate data for traininng L1-Exact:
 ```
-python scripts/data/deepscaler_dataset.py 
+python scripts/data/deepscaler_dataset.py --local_dir $DATA_DIR
 ```
 
 For L1-Max:

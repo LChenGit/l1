@@ -79,5 +79,8 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
         os.makedirs(output_dir, exist_ok=True)
         output_path = os.path.join(output_dir, 'aime2025.parquet')
     
-    pd.DataFrame(all_data).to_parquet(output_path)
+    # Save the data
+    df = pd.DataFrame(all_data)
+    df.to_parquet(output_path)
+    print(f"Saved data to {output_path}")
     

@@ -3,13 +3,20 @@ set -x
 export VLLM_ATTENTION_BACKEND=XFORMERS
 
 # Default values
-MODEL_PATH="$HOME/DeepScaleR-1.5B-Preview"
+# MODEL_PATH="$HOME/DeepScaleR-1.5B-Preview"
+MODEL_PATH="l3lab/L1-Qwen-1.5B-Exact"
 NUM_TOKENS=512  # Add default NUM_TOKENS
 MAX_TOKENS=$((NUM_TOKENS * 2))  # Set MAX_TOKENS to twice NUM_TOKENS
 DATATYPES=("gpqa" "mmlu_1000" "lsat" "aime2025" "math" "amc" "aime" "olympiad_bench")
 
-OUTPUT_DIR="$HOME"  # Add default output directory
+n_gpus_per_node=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+echo "n_gpus_per_node: ${n_gpus_per_node}"
 
+# OUTPUT_DIR=$OUTPUT_DIR
+# export OUTPUT_DIR="/lus/eagle/projects/argonne_tpc/chen/repo/myfork/l1/cache/output"
+# Set default if not provided externally
+: "${OUTPUT_DIR:=/lus/eagle/projects/argonne_tpc/chen/repo/myfork/l1/cache/output}"
+: "${DATA_DIR:=/lus/eagle/projects/argonne_tpc/chen/repo/myfork/l1/cache/data}"
 
 # Parse named arguments
 while [[ $# -gt 0 ]]; do
@@ -55,11 +62,15 @@ echo "Max Tokens: ${MAX_TOKENS}"
 
 # Loop through all datatypes
 for DATA_TYPE in "${DATATYPES[@]}"; do
+    echo "Starting generation for ${DATA_TYPE} at $(date)"
+    start_time=$(date +%s)
+    mkdir -p "${OUTPUT_DIR}/output_${NUM_TOKENS}"
+    
     python3 -m verl.trainer.main_generation \
         trainer.nnodes=1 \
-        trainer.n_gpus_per_node=8 \
-        data.path=$HOME/deepscaler/data_${NUM_TOKENS}/${DATA_TYPE}.parquet \
-        data.output_path=${OUTPUT_DIR}_${NUM_TOKENS}/${DATA_TYPE}.parquet \
+        trainer.n_gpus_per_node=${n_gpus_per_node} \
+        data.path=$DATA_DIR/data_${NUM_TOKENS}/${DATA_TYPE}.parquet \
+        data.output_path=$OUTPUT_DIR/output_${NUM_TOKENS}/${DATA_TYPE}.parquet \
         data.n_samples=16 \
         data.batch_size=2048 \
         model.path=${MODEL_PATH} \
@@ -69,5 +80,11 @@ for DATA_TYPE in "${DATATYPES[@]}"; do
         rollout.top_p=0.95 \
         rollout.gpu_memory_utilization=0.9 \
         rollout.tensor_model_parallel_size=1
+    
+    end_time=$(date +%s)
+    duration=$((end_time - start_time))
+    echo "Finished generation for ${DATA_TYPE} at $(date)"
+    echo "Total generation time for ${DATA_TYPE}: ${duration} seconds"
+    echo "----------------------------------------"
 done
 

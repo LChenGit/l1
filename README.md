@@ -29,7 +29,13 @@ pip install -e .
 
 You can use scripts in `scripts/data` to prepare your own dataset.
 
-Example, generate data for traininng L1-Exact:
+Set your `$DATA_DIR` if not yet.
+
+```bash
+export DATA_DIR="\your\data\path"
+```
+
+Example, generate data for training L1-Exact:
 ```
 python scripts/data/deepscaler_dataset.py --local_dir $DATA_DIR
 ```
@@ -41,10 +47,10 @@ python scripts/data/deepscaler_dataset.py --use_both_both
 
 For Evaluation on AIME2025, GPQA, LSAT and MMLU, you can use scripts in `scripts/eval`:
 ```
-python scripts/data/generate_aime.py
-python scripts/data/generate_gpqa.py
-python scripts/data/generate_lsat.py
-python scripts/data/generate_mmlu.py
+python scripts/data/generate_aime.py --local_dir $DATA_DIR
+python scripts/data/generate_gpqa.py --local_dir $DATA_DIR
+python scripts/data/generate_lsat.py --local_dir $DATA_DIR
+python scripts/data/generate_mmlu.py --local_dir $DATA_DIR
 ```
 
 ### Train Models

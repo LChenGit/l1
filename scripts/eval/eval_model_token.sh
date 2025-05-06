@@ -5,7 +5,7 @@ export VLLM_ATTENTION_BACKEND=XFORMERS
 # Default values
 # MODEL_PATH="$HOME/DeepScaleR-1.5B-Preview"
 MODEL_PATH="l3lab/L1-Qwen-1.5B-Exact"
-NUM_TOKENS=512  # Add default NUM_TOKENS
+NUM_TOKENS=1024  # Add default NUM_TOKENS
 MAX_TOKENS=$((NUM_TOKENS * 2))  # Set MAX_TOKENS to twice NUM_TOKENS
 DATATYPES=("gpqa" "mmlu_1000" "lsat" "aime2025" "math" "amc" "aime" "olympiad_bench")
 

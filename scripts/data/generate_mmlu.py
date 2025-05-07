@@ -16,7 +16,7 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
         question = row['question'] + "\n\nOptions:\n" + options_str
         correct_choice = chr(65 + row['answer'])
         if num_tokens < -1:
-            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + f" Think for maximum {abs(num_tokens)} tokens."
+            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + f" Think for maximum {num_tokens} tokens."
         else:
             question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + f" Think for {num_tokens} tokens."
 
@@ -45,8 +45,8 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
     all_data = [all_data[i] for i in indices[:1000]]
     if num_tokens != -1:
         if num_tokens < -1:
-            pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data9_{num_tokens}/mmlu_1000.parquet')
+            pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data9_{num_tokens}/mmlu_1000.parquet')
         else:
-            pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data_{num_tokens}/mmlu_1000.parquet')
+            pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data_{num_tokens}/mmlu_1000.parquet')
     else:
-        pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data/mmlu_1000.parquet')
+        pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data/mmlu_1000.parquet')

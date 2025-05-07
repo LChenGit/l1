@@ -10,10 +10,14 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
 
         question = ds_lsat['test'][i]['query']
         correct_choice = chr(65 + ds_lsat['test'][i]['gold'][0])
+        print(question)
+        print(correct_choice)
+        if i==5:
+            exit()
         if num_tokens < -1:
-            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + (f" Think for maximum {abs(num_tokens)} tokens.")
+            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + (f" Think for maximum {num_tokens} tokens.")
         else:
-            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + (f" Think for {abs(num_tokens)} tokens." if num_tokens != -1 else "")
+            question = f"{question}"+"\n\nLet's think step by step and output the final answer (eg, A, B, C, D) within \\boxed{}." + (f" Think for {num_tokens} tokens." if num_tokens != -1 else "")
 
         all_data.append({
                     "data_source": "lsat",
@@ -34,9 +38,9 @@ for num_tokens in [512, 1024, 2048, 3600, -512, -1024, -2048, -3600, -1]:
                 })
     if num_tokens != -1:
         if num_tokens < -1:
-            pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data9_{num_tokens}/lsat.parquet')
+            pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data9_{num_tokens}/lsat.parquet')
         else:
-            pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data_{num_tokens}/lsat.parquet')
+            pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data_{num_tokens}/lsat.parquet')
     else:
-        pd.DataFrame(all_data).to_parquet(f'~/deepscaler/data/lsat.parquet')
+        pd.DataFrame(all_data).to_parquet(f'/lus/eagle/projects/argonne_tpc/abalaji/datasets/deepscaler/data/lsat.parquet')
     

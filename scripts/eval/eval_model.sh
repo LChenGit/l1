@@ -10,7 +10,7 @@ DATATYPES=("aime2025" "math" "amc" "minerva" "olympiad_bench" "gpqa" "lsat" "mml
 
 
 # DATATYPES=("math")
-OUTPUT_DIR="$HOME/deepscaler/results"  # Add default output directory
+OUTPUT_DIR="$HOME"  # Add default output directory
 
 # Parse named arguments
 while [[ $# -gt 0 ]]; do
@@ -47,16 +47,16 @@ echo "Output Directory: ${OUTPUT_DIR}"
 
 # Loop through all datatypes
 for DATA_TYPE in "${DATATYPES[@]}"; do
-    python3 main_generation.py \
+    python3 -m verl.trainer.main_generation \
         trainer.nnodes=1 \
-        trainer.n_gpus_per_node=8 \
+        trainer.n_gpus_per_node=1 \
         data.path=$HOME/deepscaler/data/${DATA_TYPE}.parquet \
         data.output_path=${OUTPUT_DIR}/${DATA_TYPE}.parquet \
         data.n_samples=16 \
         data.batch_size=2048 \
         model.path=${MODEL_PATH} \
         rollout.temperature=0.6 \
-        rollout.response_length=2048 \
+        rollout.response_length=512 \
         rollout.top_k=-1 \
         rollout.top_p=0.95 \
         rollout.gpu_memory_utilization=0.9 \

@@ -17,14 +17,12 @@
 ```bash
 git clone https://github.com/cmu-l3/l1.git
 cd l1
-conda create -n l1 python=3.12
-conda activate l1
+pip install -e verl
+pip install packaging
+pip install ninja
 pip install flash-attn --no-build-isolation
-pip install git+https://github.com/volcengine/verl.git
-pip install -r requirements.txt
+pip install -e .
 ```
-
-Note: In the latest version of this repository, you are free to use latest version of verl, just make sure to update the configs accordingly.
 
 
 ### Prepare Dataset

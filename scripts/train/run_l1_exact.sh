@@ -24,7 +24,7 @@ if [ -z "$MODEL_PATH" ]; then
 fi
 
 # Train over a single node, 8 A100-80GB GPUs.
-python3 main_ppo.py \
+python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
     data.train_files=$HOME/deepscaler/data/train.parquet \
     data.val_files=$HOME/deepscaler/data/aime.parquet \
@@ -44,6 +44,7 @@ python3 main_ppo.py \
     actor_rollout_ref.actor.ulysses_sequence_parallel_size=1 \
     actor_rollout_ref.model.enable_gradient_checkpointing=True \
     actor_rollout_ref.actor.fsdp_config.param_offload=False \
+    actor_rollout_ref.actor.fsdp_config.grad_offload=False \
     actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
     actor_rollout_ref.rollout.tensor_model_parallel_size=2 \
     actor_rollout_ref.rollout.name=vllm \
@@ -58,15 +59,10 @@ python3 main_ppo.py \
     trainer.logger=['console','wandb'] \
     trainer.project_name='deepscaler' \
     trainer.experiment_name='l1_exact' \
+    +trainer.val_before_train=True \
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=1 \
     trainer.save_freq=20 \
     trainer.test_freq=20 \
     trainer.default_hdfs_dir=null \
-    trainer.total_epochs=3 "${@:1}" \
-    reward_config.sigmoid_reward=False \
-    reward_config.linear_reward=True \
-    reward_config.multiplier_reward=False \
-    actor_rollout_ref.rollout.enforce_eager=False \
-    actor_rollout_ref.rollout.free_cache_engine=False \
-    reward_config.alpha=0.0003
+    trainer.total_epochs=3 "${@:1}"
